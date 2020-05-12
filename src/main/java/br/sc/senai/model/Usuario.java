@@ -5,9 +5,8 @@ import javax.persistence.*;
 @Entity
 @Table(name = "usuario")
 @NamedQueries({
-        @NamedQuery(name="Usuario.login", query="SELECT u FROM Usuario u WHERE u.nome = :nome AND u.senha = :senha")
+        @NamedQuery(name="Usuario.login", query="SELECT u FROM Usuario u WHERE u.email = :email AND u.senha = :senha")
 })
-// TODO testar a named query de login
 public class Usuario {
 
     @Id
@@ -17,6 +16,8 @@ public class Usuario {
     private String nome;
 
     private String senha;
+
+    private String email;
 
     public Integer getId() {
         return id;
@@ -40,5 +41,13 @@ public class Usuario {
 
     public void setSenha(String senha) {
         this.senha = senha;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

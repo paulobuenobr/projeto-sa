@@ -5,6 +5,7 @@ import br.sc.senai.model.Usuario;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 
 public class UsuarioDaoTest {
 
@@ -17,9 +18,19 @@ public class UsuarioDaoTest {
 
         entityManager = factory.createEntityManager();
 
-        insert();
+        // insert();
 
-        // login(usuario);
+        Usuario usuario = new Usuario();
+        usuario.setEmail("jb@gmail.com");
+        usuario.setSenha("lalala");
+
+        boolean found = login(usuario);
+
+        if (found) {
+            System.out.println("Login efetuado com sucesso!");
+        } else {
+            System.out.println("Usuário e/ou senha inválidos!");
+        }
 
         entityManager.close();
         factory.close();
@@ -31,8 +42,7 @@ public class UsuarioDaoTest {
         entityManager.getTransaction().begin();
 
         Usuario usuario = new Usuario();
-        // TODO implementar email
-        // usuario.setEmail("jose.bueno@gmail.com");
+        usuario.setEmail("jb@gmail.com");
         usuario.setNome("José Bueno");
         usuario.setSenha("lalala");
 
@@ -43,9 +53,28 @@ public class UsuarioDaoTest {
     }
 
 
-    // TODO Implementar login retornando true ou false. Usar a Named Query.
     public static boolean login(Usuario usuario) {
-        return false;
+
+        boolean found = true;
+
+        try {
+
+            Query q = entityManager.createNamedQuery("Usuario.login");
+
+            q.setParameter("email", usuario.getEmail());
+            q.setParameter("senha", usuario.getSenha());
+
+            Usuario usuarioLogin = (Usuario) q.getSingleResult();
+
+            System.out.println("O usuário logado é: " + usuarioLogin.getNome());
+
+        } catch (Exception e) {
+            // e.printStackTrace();
+            found = false;
+        }
+
+        return found;
+
     }
 
 }
